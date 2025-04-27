@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Carbon Savings Calculator</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Carbon Savings Calculator</h1>
+    <form id="savingsForm">
+      <label>Distance (km):</label><br />
+      <input type="number" id="distance" required /><br /><br />
+
+      <label>Fuel Type:</label><br />
+      <select id="fuel_type" required>
+        <option value="Petrol">Petrol</option>
+        <option value="Diesel">Diesel</option>
+        <option value="EV">EV</option></select
+      ><br /><br />
+
+      <label>Traffic Condition:</label><br />
+      <select id="traffic_condition" required>
+        <option value="Light">Light</option>
+        <option value="Moderate">Moderate</option>
+        <option value="Heavy">Heavy</option></select
+      ><br /><br />
+
+      <label>Number of Riders:</label><br />
+      <input type="number" id="num_riders" required /><br /><br />
+
+      <label>Idle Time (minutes):</label><br />
+      <input type="number" id="idle_time" required /><br /><br />
+
+      <label>Trip Time (minutes):</label><br />
+      <input type="number" id="trip_time" required /><br /><br />
+
+      <label>Car Age (years):</label><br />
+      <input type="number" id="car_age" required /><br /><br />
+
+      <label>AC Used:</label><br />
+      <select id="ac_used" required>
+        <option value="true">Yes</option>
+        <option value="false">No</option></select
+      ><br /><br />
+
+      <button type="submit">Calculate</button>
+    </form>
+
+    <h2 id="result"></h2>
+
+    <script>
+      document.getElementById('savingsForm').addEventListener('submit', async function(event) {
+          event.preventDefault();
+
+          const data = {
+              distance: document.getElementById('distance').value,
+              fuel_type: document.getElementById('fuel_type').value,
+              traffic_condition: document.getElementById('traffic_condition').value,
+              num_riders: document.getElementById('num_riders').value,
+              idle_time: document.getElementById('idle_time').value,
+              trip_time: document.getElementById('trip_time').value,
+              car_age: document.getElementById('car_age').value,
+              ac_used: document.getElementById('ac_used').value === "true"
+          };
+
+          const response = await fetch('/calculate_savings', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+          });
+
+          const result = await response.json();
+          document.getElementById('result').innerText = Carbon Savings: ${result.carbon_savings} grams CO2;
+      });
+    </script>
+  </body>
+</html>
